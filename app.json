@@ -19,10 +19,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ankit7.TestingApp",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "owner": "mnd_app",
+    "extra": {
+      "eas": {
+        "projectId": "ab7ed0f8-1643-4b07-9c3c-1ca2f701b4e5"
+      }
     }
   }
 }
