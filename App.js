@@ -8,7 +8,6 @@ import CourseSelector from "./CourseSelector";
 import NotificationsScreen from "./NotificationsScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,35 +31,12 @@ export default function App() {
 
     setupNotifications();
 
-    const saveNotification = async (remoteMessage) => {
-      try {
-        const existing = await AsyncStorage.getItem("notifications");
-        let notifications = existing ? JSON.parse(existing) : [];
-
-        const newNotification = {
-          id: Date.now(),
-          title: remoteMessage.notification?.title || "",
-          body: remoteMessage.notification?.body || "",
-          receivedAt: new Date().toISOString(),
-        };
-
-        notifications.unshift(newNotification);
-        await AsyncStorage.setItem(
-          "notifications",
-          JSON.stringify(notifications)
-        );
-      } catch (e) {
-        console.error("Error saving notification:", e);
-      }
-    };
-
     // Foreground notification listener
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       Alert.alert(
         remoteMessage.notification?.title || "New Message",
         remoteMessage.notification?.body
       );
-      saveNotification(remoteMessage);
     });
 
     // Tapped Notification handler when app killed
@@ -68,7 +44,6 @@ export default function App() {
       const remoteMessage = await messaging().getInitialNotification();
       if (remoteMessage) {
         console.log("Opened from quit state:", remoteMessage);
-        saveNotification(remoteMessage); // Important!
       }
     };
     checkInitialNotification();
